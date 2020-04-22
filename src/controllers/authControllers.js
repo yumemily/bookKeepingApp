@@ -47,3 +47,16 @@ exports.auth = async (req, res, next) => {
       res.status(401).json({ status: "logged out fail", message: err.message });
     };
   }
+
+
+  exports.logoutAll = async function (req, res) {
+    try {
+      const token = req.headers.authorization.replace("Bearer ", "");
+      req.user.tokens = []
+      await req.user.save();
+      res.status(204).json({ status: "logged out success", data: null });
+    } catch (err) {
+      res.status(401).json({ status: "logged out fail", message: err.message });
+    };
+  }
+  

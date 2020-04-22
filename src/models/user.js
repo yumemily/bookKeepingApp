@@ -70,6 +70,7 @@ schema.methods.toJSON = function () {
     return newObj
 }
 
+
 const User = mongoose.model("User", schema)
 
 module.exports = User

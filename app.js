@@ -8,10 +8,10 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser")
 
 const {createAuthor, readAuthor, updateAuthor, deleteAuthor} = require("./src/controllers/authorControllers")
-const {createGenre, readGenres} = require("./src/controllers/genreControllers")
-const {createBook, readBook, updateBook} = require("./src/controllers/bookControllers")
-const {createUser} = require("./src/controllers/userControllers")
-const {login, logout, auth} = require("./src/controllers/authControllers")
+const {createGenre, readGenres, updateGenre, deleteGenre} = require("./src/controllers/genreControllers")
+const {createBook, readBook, updateBook, deleteBook} = require("./src/controllers/bookControllers")
+const {createUser, readUser, updateUser} = require("./src/controllers/userControllers")
+const {login, logout, logoutAll, auth} = require("./src/controllers/authControllers")
 
 mongoose.connect(process.env.DB_LOCAL,{
     useNewUrlParser: true,
@@ -33,26 +33,33 @@ router.route("/authors")
 .post(createAuthor)
 .get(readAuthor)
 
-router.delete("/authors/:id", deleteAuthor)
 router.put("/authors/:id", updateAuthor)
+router.delete("/authors/:id", deleteAuthor)
 
 //GENRES
 router.route("/genres")
 .post(createGenre)
 .get(readGenres)
-//delete and update genres?
+
+router.put("/genres/:id", updateGenre)
+router.delete("/genres/:id", deleteGenre)
 
 //BOOKS
 router.route("/books")
 .post(auth, createBook) //.post(auth, createBook)
 .get(auth, readBook)
 
-router.put("/books/:id", updateBook)
+router.put("/books/:id", auth, updateBook) //only the owner can edit the book
+router.delete("/books/:id", auth, deleteBook) // only the owner can delete the book
 
 //USERS
 router.route("/users")
 .post(createUser)
-// .get(readUser)
+//I don't think I want to show all other users?
+
+//update user information and get user profile
+router.put("/users/:id", auth, updateUser) //note: as of now, have to update all fields and can't leave any blank
+router.get("/users/me", auth, readUser)
 
 //LOG IN
 router.route("/auth/login")
@@ -60,8 +67,8 @@ router.route("/auth/login")
 
 //LOG OUT
 router.get("/auth/logout", auth, logout);
+router.get("/auth/logoutAll", auth, logoutAll)
 
-//do not use semicolons in the env file or it'll try to run on port:5000; :-)
 app.listen(process.env.PORT, ()=>{
     console.log('app running on port', process.env.PORT)
 })
