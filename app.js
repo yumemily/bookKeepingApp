@@ -10,7 +10,7 @@ const bodyParser = require("body-parser")
 const {createAuthor, readAuthor, updateAuthor, deleteAuthor} = require("./src/controllers/authorControllers")
 const {createGenre, readGenres, updateGenre, deleteGenre} = require("./src/controllers/genreControllers")
 const {createBook, readBook, updateBook, deleteBook} = require("./src/controllers/bookControllers")
-const {createUser, readUser, updateUser} = require("./src/controllers/userControllers")
+const {createUser, readUser, updateUser, readUsers} = require("./src/controllers/userControllers")
 const {login, logout, logoutAll, auth} = require("./src/controllers/authControllers")
 
 mongoose.connect(process.env.DB_LOCAL,{
@@ -55,6 +55,7 @@ router.delete("/books/:id", auth, deleteBook) // only the owner can delete the b
 //USERS
 router.route("/users")
 .post(createUser)
+.get(readUsers)
 //I don't think I want to show all other users?
 
 //update user information and get user profile
