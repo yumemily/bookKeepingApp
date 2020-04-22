@@ -13,6 +13,11 @@ exports.createBook = async function(req,res){
     // console.log(genreArray)
 
     const book = await new Book({
+        owner: {
+          _id: req.user._id,
+          name: req.user.name,
+          email: req.user.email
+        },
         title: title,
         genres: genres,
         author: author
@@ -22,8 +27,12 @@ exports.createBook = async function(req,res){
 }
 
 exports.readBook = async (req, res) => {
-    const books = await Book.find();
+    try {
+    const books = await Book.find({ "owner._id": req.user._id });
     return res.status(200).json({ status: "ok", data: books })
+    } catch (error){
+    return res.status(400).json({status:"fail", message: error.message})
+    }
 }
 
 exports.updateBook = async (req, res) => {

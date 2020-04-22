@@ -9,6 +9,10 @@ const bookSchema = mongoose.Schema({
         required: [true, "Title of book is required"],
         trim: true
     },
+    owner: {
+        type: Object,
+        require: [true, "Blog must have an owner"]
+    },
     genres: Array, //multiple genres per book, so we need an array of objects 
     author: Object //only one author per book
 })
