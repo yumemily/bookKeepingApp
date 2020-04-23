@@ -50,7 +50,7 @@ exports.readBook = async (req, res) => {
 
 exports.updateBook = async (req, res) => {
   const book = await Book.findById(req.params.id);
-  if (book.owner._id !== req.user._id) {
+  if (book.owner._id.toString() !== req.user._id.toString()) {
     return res.status(401).json({ error: "forbidden", message: "You can't edit this book." })
   } else {
     const fields = Object.keys(req.body);
@@ -63,13 +63,13 @@ exports.updateBook = async (req, res) => {
 //only delete books owned by owner
 exports.deleteBook = async (req, res) => {
   const book = await Book.findById(req.params.id);
-  console.log('BOOK', book.owner)
+  console.log('BOOK', book.owner._id)
   console.log("USER", req.user._id)
-  if (book.owner._id !== req.user._id) {
+  if (book.owner._id.toString() !== req.user._id.toString()) {
     return res.status(401).json({ error: "forbidden", message: "You can't delete this book." })
   } else {
     await Book.findByIdAndDelete(req.params.id);
-    return res.status(204).json({ status: true, data: null });
+    return res.status(204).json({ status: "success", data: null });
   }
 }
 
