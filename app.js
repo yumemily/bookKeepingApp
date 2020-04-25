@@ -67,7 +67,7 @@ router.route("/users")
 //I don't think I want to show all other users?
 
 //update user information and get user profile
-router.put("/users/:id", auth, updateUser)
+router.put("/users/:id", auth, updateUser)/
 router.get("/users/me", auth, readUser)
 
 //LOG IN

@@ -13,7 +13,7 @@ exports.createUser = async function (req, res) {
 
 exports.readUser = async (req, res) => {
     try {
-        const user = await User.find({ "_id": req.user._id });
+        const user = await User.findById(req.user._id);
         console.log(user)
         return res.status(200).json({ status: "ok", data: user })
     } catch (error) {
@@ -49,7 +49,7 @@ exports.updateUser = async (req, res) => {
     try {
         // const user = await User.findByIdAndUpdate({ id });
         // const { id } = req.params;
-        const user = await User.findByIdAndUpdate( {_id: req.params.id}, req.body)
+        const user = await User.findByIdAndUpdate( {_id: req.params.id}, req.body, { new:true }) //{ new:true } to have the new returned object updated
         return res.status(201).json({ status: "ok", data: user}) //200 - req has succeeded
     } catch (err) {
         return res.status(400).json({ status: "fail", data: err.message })
