@@ -6,12 +6,14 @@ const router = express.Router();
 
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser")
+const validateBook = require("./src/middlewares/validateBook");
 
 const {createAuthor, readAuthor, updateAuthor, deleteAuthor} = require("./src/controllers/authorControllers")
 const {createGenre, readGenres, updateGenre, deleteGenre} = require("./src/controllers/genreControllers")
 const {createBook, readBook, updateBook, deleteBook} = require("./src/controllers/bookControllers")
 const {createUser, readUser, updateUser, readUsers} = require("./src/controllers/userControllers")
 const {login, logout, logoutAll, auth} = require("./src/controllers/authControllers")
+const {createReview, readReviews} = require("./src/controllers/reviewControllers")
 
 mongoose.connect(process.env.DB_LOCAL,{
     useNewUrlParser: true,
@@ -44,6 +46,11 @@ router.route("/genres")
 router.put("/genres/:id", updateGenre)
 router.delete("/genres/:id", deleteGenre)
 
+//REVIEWS
+router.route("/books/:bId/reviews")
+.post(auth, validateBook, createReview)
+.get(auth, validateBook, readReviews)
+
 //BOOKS
 router.route("/books")
 .post(auth, createBook) //.post(auth, createBook)
@@ -52,6 +59,7 @@ router.route("/books")
 router.put("/books/:id", auth, updateBook) //only the owner can edit the book
 router.delete("/books/:id", auth, deleteBook) // only the owner can delete the book
 
+
 //USERS
 router.route("/users")
 .post(createUser)
@@ -59,7 +67,7 @@ router.route("/users")
 //I don't think I want to show all other users?
 
 //update user information and get user profile
-router.put("/users/:id", auth, updateUser) //note: as of now, have to update all fields and can't leave any blank
+router.put("/users/:id", auth, updateUser)
 router.get("/users/me", auth, readUser)
 
 //LOG IN
@@ -79,3 +87,10 @@ app.listen(process.env.PORT, ()=>{
 // user sign up => encrypt password => prehook for save do not store raw pw *
 //signin => compare => use Schema methods and statics => jwt 
 // authenticate jwt => read the header => get token => validate token => true/false : next function or 401
+
+//thurs - referencing approach as opposed to embedding!
+//Add a  new feature: Review on Books (user, content)
+//1. create model + relationship
+//2. route + controllers
+//2.a Crreate a new review for a book => need user ID. book ID
+//2.b write to our database => return book and review data

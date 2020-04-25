@@ -49,8 +49,8 @@ exports.updateUser = async (req, res) => {
     try {
         // const user = await User.findByIdAndUpdate({ id });
         // const { id } = req.params;
-        const user = await User.findByIdAndUpdate( req.user._id , { name: req.body.name, email: req.body.email}, { new: true })
-        return res.status(200).json({ status: "ok", data: user}) //200 - req has succeeded
+        const user = await User.findByIdAndUpdate( {_id: req.params.id}, req.body)
+        return res.status(201).json({ status: "ok", data: user}) //200 - req has succeeded
     } catch (err) {
         return res.status(400).json({ status: "fail", data: err.message })
     }

@@ -69,7 +69,7 @@ exports.deleteBook = async (req, res) => {
     return res.status(401).json({ error: "forbidden", message: "You can't delete this book." })
   } else {
     await Book.findByIdAndDelete(req.params.id);
-    return res.status(204).json({ status: "success", data: null });
+    return res.status(204).json({ status: "success", data: book });
   }
 }
 
